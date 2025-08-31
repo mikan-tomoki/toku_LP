@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Comfort AI - 衛星画像解析による快適な都市空間の創造</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #10b981;
+            --primary-dark: #059669;
+            --primary-light: #34d399;
+            --secondary-color: #1f2937;
+            --accent-color: #6ee7b7;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f0fdf4;
+            --bg-white: #ffffff;
+            --border-color: #d1fae5;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ヘッダー */
+        .header {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .cta-btn {
+            background: var(--primary-color);
+            color: white !important;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .cta-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%2310b981" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            color: var(--text-dark);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .satellite-view {
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .satellite-view::after {
+            content: '衛星画像プレビュー';
+            position: absolute;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* 概要セクション */
+        .about {
+            padding: 80px 0;
+            background: var(--bg-white);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            color: var(--text-dark);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .about-card {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+            background: white;
+        }
+
+        .icon-wrapper {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon {
+            width: 30px;
+            height: 30px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .about-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .about-card p {
+            color: var(--text-light);
+        }
+
+        /* 機能セクション */
+        .features {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .feature-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .feature-item.reverse {
+            direction: rtl;
+        }
+
+        .feature-item.reverse .feature-content {
+            direction: ltr;
+        }
+
+        .feature-image {
+            position: relative;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: 350px;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .placeholder-image.analysis {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+        }
+
+        .placeholder-image.heatmap {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b, var(--primary-color));
+        }
+
+        .placeholder-image.furniture {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+        }
+
+        .placeholder-image::after {
+            content: 'イメージ画像';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .feature-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .feature-content p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-points {
+            list-style: none;
+        }
+
+        .feature-points li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-dark);
+        }
+
+        .feature-points li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* プロセスセクション */
+        .process {
+            padding: 80px 0;
+            background: var(--bg-white);
+        }
+
+        .process-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .process-step:hover .step-number {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .process-step h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .process-step p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .process-arrow {
+            flex: 0.5;
+            height: 2px;
+            background: var(--primary-color);
+            position: relative;
+        }
+
+        .process-arrow::after {
+            content: '▶';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+
+        /* メリットセクション */
+        .benefits {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid var(--border-color);
+        }
+
+        .benefit-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .benefit-card p {
+            color: var(--text-light);
+        }
+
+        /* デモセクション */
+        .demo {
+            padding: 80px 0;
+            background: var(--bg-white);
+        }
+
+        .demo-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-btn {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .demo-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .demo-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .demo-viewer {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--border-color);
+        }
+
+        .demo-image {
+            height: 500px;
+            background: linear-gradient(135deg, #e0f2e9, #a8e6cf);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .demo-image::after {
+            content: 'デモ画像エリア';
+            font-size: 2rem;
+            color: var(--text-light);
+            font-weight: bold;
+        }
+
+        .demo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .demo-info {
+            padding: 2rem;
+            background: white;
+        }
+
+        .demo-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .demo-info p {
+            color: var(--text-light);
+        }
+
+        /* CTAセクション */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(20px, 20px);
+            }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-large {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .cta .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border-color: white;
+        }
+
+        .cta .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        /* フッター */
+        .footer {
+            background: var(--secondary-color);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3,
+        .footer-column h4 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-column h3 {
+            color: var(--accent-color);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-md);
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .hero .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .about-grid,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-item,
+            .feature-item.reverse {
+                grid-template-columns: 1fr;
+                direction: ltr;
+            }
+            
+            .process-timeline {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .process-arrow {
+                display: none;
+            }
+            
+            .demo-controls {
+                flex-wrap: wrap;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .cta h2 {
+                font-size: 1.75rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-large {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <nav class="nav">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <h1 class="logo">Urban Comfort AI</h1>
+                    <ul class="nav-menu">
+                        <li><a href="#about">概要</a></li>
+                        <li><a href="#features">機能</a></li>
+                        <li><a href="#process">プロセス</a></li>
+                        <li><a href="#benefits">メリット</a></li>
+                        <li><a href="#contact" class="cta-btn">お問い合わせ</a></li>
+                    </ul>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">
+                    AIが見つける、<br>
+                    <span class="highlight">快適な都市空間</span>
+                </h2>
+                <p class="hero-subtitle">
+                    衛星画像解析技術により、都市の快適性を可視化。<br>
+                    最適な場所にストリートファニチャーを配置し、<br>
+                    誰もが心地よく過ごせる街づくりを実現します。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#demo" class="btn btn-primary">デモを見る</a>
+                    <a href="#about" class="btn btn-secondary">詳しく見る</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="satellite-view">
+                    <img src="images/satellite-placeholder.jpg" alt="衛星画像解析" class="satellite-img">
+                    <div class="heat-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 概要セクション -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Urban Comfort AIとは</h2>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="icon-wrapper">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 2v20M2 12h20"></path>
+                        </svg>
+                    </div>
+                    <h3>衛星画像解析</h3>
+                    <p>最新のAI技術により衛星写真から都市の快適性を数値化・可視化</p>
+                </div>
+                <div class="about-card">
+                    <div class="icon-wrapper">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <path d="M7 7h10v10H7z"></path>
+                        </svg>
+                    </div>
+                    <h3>快適性マッピング</h3>
+                    <p>緑地、日陰、人流などの要素から快適/不快適エリアを特定</p>
+                </div>
+                <div class="about-card">
+                    <div class="icon-wrapper">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"></path>
+                        </svg>
+                    </div>
+                    <h3>最適配置提案</h3>
+                    <p>ベンチ、緑地、日除けなどの最適な配置場所を自動提案</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 機能セクション -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">主な機能</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-image">
+                        <div class="placeholder-image analysis"></div>
+                    </div>
+                    <div class="feature-content">
+                        <h3>リアルタイム画像解析</h3>
+                        <p>衛星画像をアップロードするだけで、即座に都市空間の快適性を分析。温度分布、緑地率、日照条件などを総合的に評価します。</p>
+                        <ul class="feature-points">
+                            <li>高精度な画像認識AI</li>
+                            <li>複数の快適性指標を同時分析</li>
+                            <li>季節・時間帯別の分析対応</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="feature-item reverse">
+                    <div class="feature-image">
+                        <div class="placeholder-image heatmap"></div>
+                    </div>
+                    <div class="feature-content">
+                        <h3>快適性ヒートマップ</h3>
+                        <p>分析結果を直感的なヒートマップで可視化。一目で快適・不快適エリアを把握でき、改善が必要な場所を特定できます。</p>
+                        <ul class="feature-points">
+                            <li>カラーグラデーションで快適度を表示</li>
+                            <li>詳細データのポップアップ表示</li>
+                            <li>時系列での変化追跡</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-image">
+                        <div class="placeholder-image furniture"></div>
+                    </div>
+                    <div class="feature-content">
+                        <h3>ファニチャー配置シミュレーション</h3>
+                        <p>AIが最適なストリートファニチャーの配置を提案。設置後の効果もシミュレーションで事前確認できます。</p>
+                        <ul class="feature-points">
+                            <li>複数の配置パターンを自動生成</li>
+                            <li>コスト対効果の算出</li>
+                            <li>3Dビジュアライゼーション</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- プロセスセクション -->
+    <section id="process" class="process">
+        <div class="container">
+            <h2 class="section-title">導入プロセス</h2>
+            <div class="process-timeline">
+                <div class="process-step">
+                    <div class="step-number">01</div>
+                    <h3>画像取得</h3>
+                    <p>対象エリアの衛星画像を取得またはアップロード</p>
+                </div>
+                <div class="process-arrow"></div>
+                <div class="process-step">
+                    <div class="step-number">02</div>
+                    <h3>AI解析</h3>
+                    <p>画像解析AIが快適性を多角的に分析</p>
+                </div>
+                <div class="process-arrow"></div>
+                <div class="process-step">
+                    <div class="step-number">03</div>
+                    <h3>マッピング</h3>
+                    <p>分析結果を可視化し課題エリアを特定</p>
+                </div>
+                <div class="process-arrow"></div>
+                <div class="process-step">
+                    <div class="step-number">04</div>
+                    <h3>提案生成</h3>
+                    <p>最適なファニチャー配置プランを自動生成</p>
+                </div>
+                <div class="process-arrow"></div>
+                <div class="process-step">
+                    <div class="step-number">05</div>
+                    <h3>実装</h3>
+                    <p>承認されたプランに基づき設置を実施</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- メリットセクション -->
+    <section id="benefits" class="benefits">
+        <div class="container">
+            <h2 class="section-title">導入メリット</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3>データドリブンな意思決定</h3>
+                    <p>感覚ではなく客観的データに基づいた都市計画が可能に</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>迅速な分析</h3>
+                    <p>従来の現地調査と比べ、大幅な時間短縮を実現</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>コスト削減</h3>
+                    <p>効率的な配置により、無駄な投資を削減</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">😊</div>
+                    <h3>市民満足度向上</h3>
+                    <p>快適な都市空間により、市民のQOL向上に貢献</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌱</div>
+                    <h3>持続可能な街づくり</h3>
+                    <p>環境負荷を考慮した最適な都市設計を支援</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <h3>継続的改善</h3>
+                    <p>定期的な分析により、改善効果を追跡・最適化</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- デモセクション -->
+    <section id="demo" class="demo">
+        <div class="container">
+            <h2 class="section-title">インタラクティブデモ</h2>
+            <div class="demo-container">
+                <div class="demo-controls">
+                    <button class="demo-btn active" data-view="original">元画像</button>
+                    <button class="demo-btn" data-view="analysis">快適性分析</button>
+                    <button class="demo-btn" data-view="proposal">改善提案</button>
+                </div>
+                <div class="demo-viewer">
+                    <div class="demo-image" id="demoImage">
+                        <div class="demo-overlay" id="demoOverlay"></div>
+                    </div>
+                    <div class="demo-info" id="demoInfo">
+                        <h4>元の衛星画像</h4>
+                        <p>対象エリアの現状を表示しています。ボタンをクリックして分析結果をご覧ください。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTAセクション -->
+    <section id="contact" class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>あなたの街を、もっと快適に</h2>
+                <p>Urban Comfort AIで、データに基づいた都市計画を始めませんか？</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary btn-large">無料相談を申し込む</a>
+                    <a href="#" class="btn btn-secondary btn-large">資料をダウンロード</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Urban Comfort AI</h3>
+                    <p>画像解析AIで快適な都市空間を創造</p>
+                </div>
+                <div class="footer-column">
+                    <h4>リンク</h4>
+                    <ul>
+                        <li><a href="#">会社概要</a></li>
+                        <li><a href="#">導入事例</a></li>
+                        <li><a href="#">技術仕様</a></li>
+                        <li><a href="#">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>お問い合わせ</h4>
+                    <p>Email: info@urbancomfort-ai.jp</p>
+                    <p>Tel: 03-XXXX-XXXX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Urban Comfort AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // モバイルメニューの開閉
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.querySelector('.nav-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            
+            // ハンバーガーメニューのアニメーション
+            const spans = mobileMenuBtn.querySelectorAll('span');
+            if (navMenu.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translateY(8px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translateY(-8px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        });
+
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // モバイルメニューを閉じる
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        const spans = mobileMenuBtn.querySelectorAll('span');
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                }
+            });
+        });
+
+        // デモセクションのインタラクション
+        const demoBtns = document.querySelectorAll('.demo-btn');
+        const demoImage = document.getElementById('demoImage');
+        const demoOverlay = document.getElementById('demoOverlay');
+        const demoInfo = document.getElementById('demoInfo');
+
+        const demoData = {
+            original: {
+                title: '元の衛星画像',
+                description: '対象エリアの現状を表示しています。ボタンをクリックして分析結果をご覧ください。',
+                bgColor: 'linear-gradient(135deg, #e0f2e9, #a8e6cf)',
+                overlayOpacity: 0
+            },
+            analysis: {
+                title: '快適性分析結果',
+                description: '赤色：不快適エリア（高温、緑地不足）｜黄色：普通エリア｜緑色：快適エリア（適温、緑地豊富）',
+                bgColor: 'linear-gradient(135deg, #fecaca, #fde68a, #86efac)',
+                overlayOpacity: 0.6
+            },
+            proposal: {
+                title: '改善提案マップ',
+                description: 'ベンチ、日除け、植栽などの最適配置を表示。緑のマーカーが推奨設置位置を示しています。',
+                bgColor: 'linear-gradient(135deg, #a7f3d0, #6ee7b7)',
+                overlayOpacity: 0.8
+            }
+        };
+
+        demoBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // アクティブなボタンの切り替え
+                demoBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // デモビューの更新
+                const view = btn.dataset.view;
+                const data = demoData[view];
+                
+                demoImage.style.background = data.bgColor;
+                demoOverlay.style.opacity = data.overlayOpacity;
+                
+                // 情報の更新
+                demoInfo.querySelector('h4').textContent = data.title;
+                demoInfo.querySelector('p').textContent = data.description;
+                
+                // オーバーレイの背景パターンを変更
+                if (view === 'analysis') {
+                    demoOverlay.style.background = 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,0,0,0.1) 10px, rgba(255,0,0,0.1) 20px)';
+                } else if (view === 'proposal') {
+                    demoOverlay.style.background = 'radial-gradient(circle at 20% 40%, rgba(16,185,129,0.5) 5px, transparent 5px), radial-gradient(circle at 60% 70%, rgba(16,185,129,0.5) 5px, transparent 5px), radial-gradient(circle at 80% 20%, rgba(16,185,129,0.5) 5px, transparent 5px)';
+                } else {
+                    demoOverlay.style.background = 'none';
+                }
+            });
+        });
+
+        // スクロールアニメーション
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // アニメーション対象の要素を監視
+        document.querySelectorAll('.about-card, .benefit-card, .process-step, .feature-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // ページロード時のアニメーション
+        window.addEventListener('load', () => {
+            // ヒーローセクションのフェードイン
+            const heroContent = document.querySelector('.hero-content');
+            const heroImage = document.querySelector('.hero-image');
+            
+            setTimeout(() => {
+                heroContent.style.opacity = '0';
+                heroContent.style.transform = 'translateX(-50px)';
+                heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
+                
+                heroImage.style.opacity = '0';
+                heroImage.style.transform = 'translateX(50px)';
+                heroImage.style.transition = 'opacity 1s ease, transform 1s ease';
+                
+                setTimeout(() => {
+                    heroContent.style.opacity = '1';
+                    heroContent.style.transform = 'translateX(0)';
+                    heroImage.style.opacity = '1';
+                    heroImage.style.transform = 'translateX(0)';
+                }, 100);
+            }, 100);
+        });
+
+        // パララックス効果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            
+            if (hero && scrolled < hero.offsetHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // フォーム送信のシミュレーション
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            if (btn.textContent.includes('無料相談') || btn.textContent.includes('デモ')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log('フォーム表示処理を実装');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
