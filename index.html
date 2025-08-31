@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urban Comfort AI - 衛星画像解析による快適な都市空間の創造</title>
+    <title>Toku冷st - 外出したくなる快適なまちづくり</title>
     <style>
         * {
             margin: 0;
@@ -227,14 +227,16 @@
 
         /* 概要セクション */
         .about {
-            padding: 80px 0;
+            padding: 120px 0 80px;
             background: var(--bg-white);
+            margin-top: 20px;
         }
 
         .section-title {
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 3rem;
+            padding-bottom: 1rem;
             position: relative;
             color: var(--text-dark);
         }
@@ -242,7 +244,7 @@
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 60px;
@@ -253,7 +255,7 @@
 
         .about-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
         }
 
@@ -302,7 +304,7 @@
 
         /* 機能セクション */
         .features {
-            padding: 80px 0;
+            padding: 100px 0 80px;
             background: var(--bg-light);
         }
 
@@ -396,7 +398,7 @@
 
         /* プロセスセクション */
         .process {
-            padding: 80px 0;
+            padding: 100px 0 80px;
             background: var(--bg-white);
         }
 
@@ -464,7 +466,7 @@
 
         /* メリットセクション */
         .benefits {
-            padding: 80px 0;
+            padding: 100px 0 80px;
             background: var(--bg-light);
         }
 
@@ -505,7 +507,7 @@
 
         /* デモセクション */
         .demo {
-            padding: 80px 0;
+            padding: 100px 0 80px;
             background: var(--bg-white);
         }
 
@@ -741,7 +743,10 @@
                 justify-content: center;
             }
             
-            .about-grid,
+            .about-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .benefits-grid {
                 grid-template-columns: 1fr;
             }
@@ -790,6 +795,10 @@
             .btn-large {
                 width: 100%;
             }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -799,7 +808,7 @@
         <nav class="nav">
             <div class="container">
                 <div class="nav-wrapper">
-                    <h1 class="logo">Urban Comfort AI</h1>
+                    <h1 class="logo">Toku 冷st</h1>
                     <ul class="nav-menu">
                         <li><a href="#about">概要</a></li>
                         <li><a href="#features">機能</a></li>
@@ -847,7 +856,7 @@
     <!-- 概要セクション -->
     <section id="about" class="about">
         <div class="container">
-            <h2 class="section-title">Urban Comfort AIとは</h2>
+            <h2 class="section-title">Toku 冷stとは</h2>
             <div class="about-grid">
                 <div class="about-card">
                     <div class="icon-wrapper">
@@ -868,6 +877,18 @@
                     </div>
                     <h3>快適性マッピング</h3>
                     <p>緑地、日陰、人流などの要素から快適/不快適エリアを特定</p>
+                </div>
+                <div class="about-card">
+                    <div class="icon-wrapper">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>人口統計分析</h3>
+                    <p>携帯位置データから滞在者の性別・年齢層を分析し、エリアごとの利用者層を把握</p>
                 </div>
                 <div class="about-card">
                     <div class="icon-wrapper">
@@ -896,7 +917,7 @@
                         <p>衛星画像をアップロードするだけで、即座に都市空間の快適性を分析。温度分布、緑地率、日照条件などを総合的に評価します。</p>
                         <ul class="feature-points">
                             <li>高精度な画像認識AI</li>
-                            <li>複数の快適性指標を同時分析</li>
+                            <li>携帯データによる性別・年齢層分析</li>
                             <li>季節・時間帯別の分析対応</li>
                         </ul>
                     </div>
@@ -910,7 +931,7 @@
                         <p>分析結果を直感的なヒートマップで可視化。一目で快適・不快適エリアを把握でき、改善が必要な場所を特定できます。</p>
                         <ul class="feature-points">
                             <li>カラーグラデーションで快適度を表示</li>
-                            <li>詳細データのポップアップ表示</li>
+                            <li>利用者の属性データを重ね合わせ表示</li>
                             <li>時系列での変化追跡</li>
                         </ul>
                     </div>
@@ -921,9 +942,9 @@
                     </div>
                     <div class="feature-content">
                         <h3>ファニチャー配置シミュレーション</h3>
-                        <p>AIが最適なストリートファニチャーの配置を提案。設置後の効果もシミュレーションで事前確認できます。</p>
+                        <p>AIが最適なストリートファニチャーの配置を提案。年齢層や性別に応じた設備の選定も可能です。</p>
                         <ul class="feature-points">
-                            <li>複数の配置パターンを自動生成</li>
+                            <li>利用者属性に基づく最適化</li>
                             <li>コスト対効果の算出</li>
                             <li>3Dビジュアライゼーション</li>
                         </ul>
@@ -1038,7 +1059,7 @@
         <div class="container">
             <div class="cta-content">
                 <h2>あなたの街を、もっと快適に</h2>
-                <p>Urban Comfort AIで、データに基づいた都市計画を始めませんか？</p>
+                <p>Toku 冷stで、データに基づいた都市計画を始めませんか？</p>
                 <div class="cta-buttons">
                     <a href="#" class="btn btn-primary btn-large">無料相談を申し込む</a>
                     <a href="#" class="btn btn-secondary btn-large">資料をダウンロード</a>
@@ -1052,8 +1073,8 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>Urban Comfort AI</h3>
-                    <p>画像解析AIで快適な都市空間を創造</p>
+                    <h3>Toku 冷st</h3>
+                    <p>快適な空間づくり</p>
                 </div>
                 <div class="footer-column">
                     <h4>リンク</h4>
@@ -1066,12 +1087,12 @@
                 </div>
                 <div class="footer-column">
                     <h4>お問い合わせ</h4>
-                    <p>Email: info@urbancomfort-ai.jp</p>
+                    <p>Email: info@toku-reist.jp</p>
                     <p>Tel: 03-XXXX-XXXX</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Urban Comfort AI. All rights reserved.</p>
+                <p>&copy; 2024 Toku 冷st. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1103,7 +1124,7 @@
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    const headerOffset = 80;
+                    const headerOffset = 100;
                     const elementPosition = target.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
